@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<h1>Статистика</h1>
+<p>Всего потрачено: {{ total_spent }} руб. Трат в базе: {{ transactions|length }}</p>
+
+{% if has_charts %}
+    <h2>Траты по категориям</h2>
+    <img src="{{ url_for('static', filename='img/categories.png') }}?v={{ chart_version }}"
+         alt="График трат по категориям">
+
+    <h2>Доля карт</h2>
+    <img src="{{ url_for('static', filename='img/cards.png') }}?v={{ chart_version }}"
+         alt="Круговая диаграмма трат по картам">
+
+    <h2>Разбивка по категориям</h2>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Категория</th>
+            <th>Сумма, руб.</th>
+            <th>Доля, %</th>
+        </tr>
+        {% for category, amount in category_rows %}
+        <tr>
+            <td>{{ category }}</td>
+            <td>{{ amount }}</td>
+            <td>{{ (amount / total_spent * 100) | round(1) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Графики появятся, когда добавите первые траты.</p>
+{% endif %}
+{% endblock %}

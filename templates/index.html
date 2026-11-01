@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная — Кэшбэк-оптимизатор{% endblock %}
+
+{% block content %}
+<h1>Кэшбэк-оптимизатор</h1>
+<p>Трат всего: {{ total_spent }} руб.</p>
+<p>Карт в базе: {{ cards|length }}, трат: {{ transactions_count }}</p>
+<ul>
+    {% for card in cards %}
+        <li><a href="{{ url_for('card_detail', card_id=card.id) }}">{{ card.name }}</a></li>
+    {% else %}
+        <li>Карт пока нет — <a href="{{ url_for('add_card') }}">добавьте первую</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

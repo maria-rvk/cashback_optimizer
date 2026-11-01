@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <p>{{ form.store_name.label }}<br>{{ form.store_name() }}
+        {% for error in form.store_name.errors %}<span class="error">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.category.label }}<br>{{ form.category() }}</p>
+    <p>{{ form.amount.label }}<br>{{ form.amount() }}
+        {% for error in form.amount.errors %}<span class="error">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.spent_on.label }}<br>{{ form.spent_on() }}</p>
+    <p>{{ form.card_id.label }}<br>{{ form.card_id() }}</p>
+    {{ form.submit() }}
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Карты{% endblock %}
+
+{% block content %}
+<h1>Мои карты</h1>
+<p><a href="{{ url_for('add_card') }}">+ Добавить карту</a></p>
+{% for card in cards %}
+    <div class="card-item">
+        <h3><a href="{{ url_for('card_detail', card_id=card.id) }}">{{ card.name }}</a></h3>
+        <p>Кэшбэк «на всё остальное»: {{ card.default_percent }}%</p>
+        <ul>
+            {% for rule in card.rules %}
+                <li>{{ rule.category }} — {{ rule.percent }}%</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% else %}
+    <p>Карт пока нет.</p>
+{% endfor %}
+{% endblock %}

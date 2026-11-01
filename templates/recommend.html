@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Какой картой платить?{% endblock %}
+
+{% block content %}
+<h1>Какой картой платить?</h1>
+<p>Выбери предстоящую покупку — подскажу, где кэшбэк больше.</p>
+
+<form method="post">
+    {{ form.hidden_tag() }}
+    <p>{{ form.store_name.label }}<br>{{ form.store_name() }}
+        {% for error in form.store_name.errors %}<span class="error">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.category.label }}<br>{{ form.category() }}</p>
+    <p>{{ form.amount.label }}<br>{{ form.amount() }}
+        {% for error in form.amount.errors %}<span class="error">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.spent_on.label }}<br>{{ form.spent_on() }}</p>
+    {{ form.submit(label='Подсказать карту') }}
+</form>
+
+{% if recommendation %}
+    <h2>Рекомендация</h2>
+    <p>За покупку «{{ form.store_name.data }}» на {{ form.amount.data }} руб.
+       выгоднее платить картой <b>{{ recommendation[0].name }}</b>:
+       кэшбэк составит <b>{{ recommendation[1] | round(2) }} руб.</b></p>
+
+    <h2>Полный рейтинг карт</h2>
+    <table border="1" cellpadding="6">
+        <tr><th>Карта</th><th>Кэшбэк, руб.</th></tr>
+        {% for card, cashback in rating %}
+        <tr>
+            <td>{{ card.name }}</td>
+            <td>{{ cashback | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% endblock %}
