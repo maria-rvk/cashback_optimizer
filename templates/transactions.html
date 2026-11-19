@@ -3,34 +3,43 @@
 {% block title %}Траты{% endblock %}
 
 {% block content %}
-<h1>История трат</h1>
-<p><a href="{{ url_for('add_transaction') }}">+ Добавить трату</a></p>
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Дата</th>
-        <th>Место</th>
-        <th>Категория</th>
-        <th>Сумма</th>
-        <th>Карта</th>
-        <th></th>
-    </tr>
-    {% for t in transactions %}
-    <tr>
-        <td>{{ t.spent_on }}</td>
-        <td>{{ t.store_name }}</td>
-        <td>{{ t.category }}</td>
-        <td>{{ t.amount }} руб.</td>
-        <td>{{ t.card.name }}</td>
-        <td>
-            <a href="{{ url_for('edit_transaction', tr_id=t.id) }}">✎</a>
-            <form method="post" action="{{ url_for('delete_transaction', tr_id=t.id) }}" style="display:inline">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" onclick="return confirm('Удалить трату?')">✕</button>
-            </form>
-        </td>
-    </tr>
-    {% else %}
-    <tr><td colspan="6">Трат пока нет — добавьте первую!</td></tr>
-    {% endfor %}
-</table>
+<div class="page-header">
+    <h1>История трат</h1>
+    <a class="btn" href="{{ url_for('add_transaction') }}">+ Добавить трату</a>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Место</th>
+            <th>Категория</th>
+            <th>Сумма</th>
+            <th>Карта</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.spent_on }}</td>
+            <td>{{ t.store_name }}</td>
+            <td><span class="chip">{{ t.category }}</span></td>
+            <td>{{ t.amount | money }} ₽</td>
+            <td>{{ t.card.name }}</td>
+            <td class="actions">
+                <a href="{{ url_for('edit_transaction', tr_id=t.id) }}" title="Редактировать">✎</a>
+                <form method="post" action="{{ url_for('delete_transaction', tr_id=t.id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-danger btn-small" onclick="return confirm('Удалить трату?')">✕</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="muted">Трат пока нет — добавьте первую!</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

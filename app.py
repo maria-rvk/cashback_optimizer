@@ -23,6 +23,14 @@ csrf = CSRFProtect(app)
 db.init_app(app)
 
 
+# ---------- Красивые суммы ----------
+
+@app.template_filter('money')
+def money(value):
+    """12345.6 -> '12 345,60' — суммы с пробелами и копейками."""
+    return f'{value:,.2f}'.replace(',', ' ').replace('.', ',')
+
+
 # ---------- Главная страница ----------
 
 @app.route('/')
@@ -179,7 +187,7 @@ def stats():
     transactions = Transaction.query.all()
     total_spent = sum(t.amount for t in transactions)
 
-    has_charts = build_charts()
+    has_charts = build_charts()   # PNG-картинки (Matplotlib)
 
     # Разбивка по категориям для таблицы
     by_category = defaultdict(float)
@@ -190,10 +198,12 @@ def stats():
     return render_template(
         'stats.html',
         total_spent=total_spent,
+        transactions_count=len(transactions),
         has_charts=has_charts,
         category_rows=category_rows,
-        chart_version=int(time.time()),
+        chart_version=int(time.time()),   # сбрасываем кэш картинок
     )
+
 
 # ---------- Рекомендация: какой картой платить ----------
 

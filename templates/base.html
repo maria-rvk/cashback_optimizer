@@ -2,24 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Кэшбэк-оптимизатор{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <nav>
-        <a href="{{ url_for('index') }}">Главная</a>
-	<a href="{{ url_for('recommend') }}">Советник</a>
-        <a href="{{ url_for('transactions_list') }}">Траты</a>
-        <a href="{{ url_for('cards_list') }}">Карты</a>
-        <a href="{{ url_for('stats') }}">Статистика</a>
-    </nav>
-
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <p class="flash">{{ message }}</p>
-        {% endfor %}
-    {% endwith %}
-
+    <header>
+        <h1>Кэшбэк-оптимизатор</h1>
+        <nav>
+            <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' }}">Главная</a>
+            <a href="{{ url_for('cards_list') }}" class="{{ 'active' if request.endpoint in ['cards_list', 'add_card', 'card_detail'] }}">Карты</a>
+            <a href="{{ url_for('transactions_list') }}" class="{{ 'active' if request.endpoint in ['transactions_list', 'add_transaction', 'edit_transaction'] }}">Траты</a>
+            <a href="{{ url_for('stats') }}" class="{{ 'active' if request.endpoint == 'stats' }}">Статистика</a>
+            <a href="{{ url_for('recommend') }}" class="{{ 'active' if request.endpoint == 'recommend' }}">Советник</a>
+        </nav>
+    </header>
     <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="flash">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 </body>

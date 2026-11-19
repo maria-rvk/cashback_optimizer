@@ -3,19 +3,32 @@
 {% block title %}Карты{% endblock %}
 
 {% block content %}
-<h1>Мои карты</h1>
-<p><a href="{{ url_for('add_card') }}">+ Добавить карту</a></p>
+<div class="page-header">
+    <h1>Мои карты</h1>
+    <a class="btn" href="{{ url_for('add_card') }}">+ Добавить карту</a>
+</div>
+
 {% for card in cards %}
-    <div class="card-item">
-        <h3><a href="{{ url_for('card_detail', card_id=card.id) }}">{{ card.name }}</a></h3>
-        <p>Кэшбэк «на всё остальное»: {{ card.default_percent }}%</p>
-        <ul>
-            {% for rule in card.rules %}
-                <li>{{ rule.category }} — {{ rule.percent }}%</li>
-            {% endfor %}
-        </ul>
+<div class="card">
+    <div class="page-header">
+        <h3><a class="plain-link" href="{{ url_for('card_detail', card_id=card.id) }}">{{ card.name }}</a></h3>
+        <a class="btn-outline" href="{{ url_for('card_detail', card_id=card.id) }}">Открыть</a>
     </div>
+    <p>Кэшбэк «на всё остальное»: <strong>{{ card.default_percent }}%</strong></p>
+    {% if card.rules %}
+    <ul class="rule-list">
+        {% for rule in card.rules %}
+        <li class="rule-item"><span class="chip">{{ rule.category }}</span> — {{ rule.percent }}%</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">Правил пока нет — карта даёт только кэшбэк «на всё остальное».</p>
+    {% endif %}
+</div>
 {% else %}
+<div class="card">
     <p>Карт пока нет.</p>
+    <p><a class="btn" href="{{ url_for('add_card') }}">+ Добавить карту</a></p>
+</div>
 {% endfor %}
 {% endblock %}

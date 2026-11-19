@@ -4,32 +4,35 @@
 
 {% block content %}
 <h1>{{ card.name }}</h1>
-<p>Кэшбэк «на всё остальное»: {{ card.default_percent }}%</p>
 
-<h2>Правила кэшбэка</h2>
-<ul>
-    {% for rule in card.rules %}
-        <li>
-            {{ rule.category }} — {{ rule.percent }}%
-            <form method="post" action="{{ url_for('delete_rule', rule_id=rule.id) }}" style="display:inline">
+<div class="card">
+    <p>Кэшбэк «на всё остальное»: <strong>{{ card.default_percent }}%</strong></p>
+
+    <h2>Правила кэшбэка</h2>
+    <ul class="rule-list">
+        {% for rule in card.rules %}
+        <li class="rule-item">
+            <span class="chip">{{ rule.category }}</span> — {{ rule.percent }}%
+            <form method="post" action="{{ url_for('delete_rule', rule_id=rule.id) }}" class="inline-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" onclick="return confirm('Удалить правило?')">✕</button>
+                <button type="submit" class="btn-danger btn-small" onclick="return confirm('Удалить правило?')">✕</button>
             </form>
         </li>
-    {% else %}
-        <li>Правил пока нет — эта карта даёт только кэшбэк «на всё остальное».</li>
-    {% endfor %}
-</ul>
-
-<h2>Добавить правило</h2>
-<form method="post">
-    {{ rule_form.hidden_tag() }}
-    <p>{{ rule_form.category.label }}<br>{{ rule_form.category() }}</p>
-    <p>{{ rule_form.percent.label }}<br>{{ rule_form.percent() }}
-        {% for error in rule_form.percent.errors %}
-            <span class="error">{{ error }}</span>
+        {% else %}
+        <li class="muted">Правил пока нет — эта карта даёт только кэшбэк «на всё остальное».</li>
         {% endfor %}
-    </p>
-    {{ rule_form.submit() }}
-</form>
+    </ul>
+
+    <h2>Добавить правило</h2>
+    <form method="post">
+        {{ rule_form.hidden_tag() }}
+        <p>{{ rule_form.category.label }}<br>{{ rule_form.category() }}</p>
+        <p>{{ rule_form.percent.label }}<br>{{ rule_form.percent() }}
+            {% for error in rule_form.percent.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </p>
+        {{ rule_form.submit() }}
+    </form>
+</div>
 {% endblock %}

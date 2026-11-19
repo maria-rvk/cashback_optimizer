@@ -3,14 +3,58 @@
 {% block title %}Главная — Кэшбэк-оптимизатор{% endblock %}
 
 {% block content %}
-<h1>Кэшбэк-оптимизатор</h1>
-<p>Трат всего: {{ total_spent }} руб.</p>
-<p>Карт в базе: {{ cards|length }}, трат: {{ transactions_count }}</p>
-<ul>
+<div class="hero">
+    <h1>Кэшбэк-оптимизатор</h1>
+    <p>Узнай, какой картой платить, чтобы вернуть максимум</p>
+    <div class="hero-actions">
+        <a class="btn-light" href="{{ url_for('recommend') }}">Какой картой платить?</a>
+        <a class="btn-ghost" href="{{ url_for('add_transaction') }}">+ Добавить трату</a>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-tile">
+        <div class="stat-value">{{ cards|length }}</div>
+        <div class="stat-label">карт в кошельке</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-value">{{ transactions_count }}</div>
+        <div class="stat-label">трат учтено</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-value">{{ total_spent | money }} ₽</div>
+        <div class="stat-label">всего потрачено</div>
+    </div>
+</div>
+
+<div class="page-header">
+    <h2>Мои карты</h2>
+    <a class="btn" href="{{ url_for('add_card') }}">+ Добавить карту</a>
+</div>
+
+{% if cards %}
+<div class="card-grid">
     {% for card in cards %}
-        <li><a href="{{ url_for('card_detail', card_id=card.id) }}">{{ card.name }}</a></li>
-    {% else %}
-        <li>Карт пока нет — <a href="{{ url_for('add_card') }}">добавьте первую</a></li>
+    <a class="card mini-card" href="{{ url_for('card_detail', card_id=card.id) }}">
+        <div class="mini-card-name">{{ card.name }}</div>
+        <div class="mini-card-percent">{{ card.default_percent }}%</div>
+        <div class="muted">кэшбэк «на всё остальное»</div>
+        {% if card.rules %}
+        <div class="mini-card-chips">
+            {% for rule in card.rules %}
+            <span class="chip">{{ rule.category }} {{ rule.percent }}%</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="mini-card-chips muted">без специальных правил</div>
+        {% endif %}
+    </a>
     {% endfor %}
-</ul>
+</div>
+{% else %}
+<div class="card">
+    <p>Карт пока нет. Добавьте первую — и советник начнёт подсказывать, чем платить.</p>
+</div>
+{% endif %}
+
 {% endblock %}
